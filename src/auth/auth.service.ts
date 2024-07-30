@@ -63,6 +63,8 @@ export class AuthService {
 			password: await hash(dto.password, salt),
 		});
 
+		await newUser.save();
+
 		const tokens = await this.issueTokenPair(String(newUser._id));
 
 		return {
