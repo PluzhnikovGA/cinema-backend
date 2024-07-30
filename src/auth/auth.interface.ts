@@ -14,3 +14,5 @@ export interface ITokenPair {
 export interface AuthResponse extends ITokenPair {
 	user: IUserFields;
 }
+
+export type TAuthRole = 'admin' | 'user' | undefined;

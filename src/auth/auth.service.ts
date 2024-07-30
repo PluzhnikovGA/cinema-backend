@@ -10,6 +10,7 @@ import { AuthDto } from './dto/auth.dto';
 import { hash, genSalt, compare } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { ITokenPair, IUserFields, AuthResponse } from './auth.interface';
+import { RefreshTokenDto } from './dto/refreshToken.dto';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,25 @@ export class AuthService {
 
 	async login(dto: AuthDto): Promise<AuthResponse> {
 		const user = await this.validateUser(dto);
+
+		const tokens = await this.issueTokenPair(String(user._id));
+
+		return {
+			user: this.returnUserFields(user),
+			...tokens,
+		};
+	}
+
+	async getNewTokens(dto: RefreshTokenDto): Promise<AuthResponse> {
+		const { refreshToken } = dto;
+
+		if (!refreshToken) throw new UnauthorizedException('Please sign in!');
+
+		const result = await this.jwtService.verifyAsync(refreshToken);
+
+		if (!result) throw new UnauthorizedException('Invalid token or expired!');
+
+		const user = await this.UserModel.findById(result._id);
 
 		const tokens = await this.issueTokenPair(String(user._id));
 
