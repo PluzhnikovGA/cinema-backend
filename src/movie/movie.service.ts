@@ -72,6 +72,16 @@ export class MovieService {
 			.exec();
 	}
 
+	async updateRating(id: string, newRating: number) {
+		return this.MovieModel.findByIdAndUpdate(
+			id,
+			{
+				rating: newRating,
+			},
+			{ new: true }
+		).exec();
+	}
+
 	/* Admin */
 	async byId(_id: string) {
 		const movie = await this.MovieModel.findById(_id);

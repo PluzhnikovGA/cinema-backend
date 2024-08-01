@@ -19,5 +19,6 @@ import { GenreModel } from 'src/genre/genre.model';
 	],
 	controllers: [MovieController],
 	providers: [MovieService],
+	exports: [MovieService],
 })
 export class MovieModule {}
