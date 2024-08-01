@@ -50,7 +50,8 @@ export class AuthService {
 	}
 
 	async register(dto: AuthDto): Promise<AuthResponse> {
-		const oldUser = await this.UserModel.findOne({ email: dto.email });
+		const oldUser = await this.UserModel.findOne({ email: dto.email }).exec();
+
 		if (oldUser)
 			throw new BadRequestException(
 				'User with this email has already been in the system'
@@ -74,7 +75,7 @@ export class AuthService {
 	}
 
 	async validateUser(dto: AuthDto): Promise<UserModel> {
-		const user = await this.UserModel.findOne({ email: dto.email });
+		const user = await this.UserModel.findOne({ email: dto.email }).exec();
 		if (!user) throw new UnauthorizedException('User not found');
 
 		const isValidPassword = await compare(dto.password, user.password);
