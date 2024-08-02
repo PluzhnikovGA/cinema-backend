@@ -3,6 +3,7 @@ import { InjectModel } from 'nestjs-typegoose';
 import { MovieModel } from './movie.model';
 import { ModelType } from '@typegoose/typegoose/lib/types';
 import { UpdateMovieDto } from './dto/updateMovie.dto';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class MovieService {
@@ -28,7 +29,7 @@ export class MovieService {
 		return movies;
 	}
 
-	async byGenres(genreIds: string[]) {
+	async byGenres(genreIds: string[] | Types.ObjectId[]) {
 		const movies = await this.MovieModel.findOne({
 			genres: { $in: genreIds },
 		}).exec();
