@@ -22,7 +22,7 @@ export class AuthService {
 	async login(dto: AuthDto): Promise<AuthResponse> {
 		const user = await this.validateUser(dto);
 
-		const tokens = await this.issueTokenPair(String(user._id));
+		const tokens = await this.issueTokenPair(String(user._id), user.isAdmin);
 
 		return {
 			user: this.returnUserFields(user),
@@ -41,7 +41,7 @@ export class AuthService {
 
 		const user = await this.UserModel.findById(result._id);
 
-		const tokens = await this.issueTokenPair(String(user._id));
+		const tokens = await this.issueTokenPair(String(user._id), user.isAdmin);
 
 		return {
 			user: this.returnUserFields(user),
@@ -66,7 +66,10 @@ export class AuthService {
 
 		await newUser.save();
 
-		const tokens = await this.issueTokenPair(String(newUser._id));
+		const tokens = await this.issueTokenPair(
+			String(newUser._id),
+			newUser.isAdmin
+		);
 
 		return {
 			user: this.returnUserFields(newUser),
@@ -84,8 +87,8 @@ export class AuthService {
 		return user;
 	}
 
-	async issueTokenPair(userId: string): Promise<ITokenPair> {
-		const data = { _id: userId };
+	async issueTokenPair(userId: string, isAdmin: boolean): Promise<ITokenPair> {
+		const data = { _id: userId, isAdmin: isAdmin };
 
 		const refreshToken = await this.jwtService.signAsync(data, {
 			expiresIn: '15d',
