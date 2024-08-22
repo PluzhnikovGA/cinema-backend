@@ -27,15 +27,13 @@ export class UserService {
 
 		if (isSameUser && String(_id) !== String(isSameUser._id))
 			throw new NotFoundException('Email is busy');
-
-		if (dto.password) {
+		if (!!dto.password) {
 			const salt = await genSalt(10);
 			user.password = await hash(dto.password, salt);
 		}
 
 		user.email = dto.email;
-		if (dto.isAdmin || dto.isAdmin === false) user.isAdmin === dto.isAdmin;
-
+		if (dto.isAdmin || dto.isAdmin === false) user.isAdmin = dto.isAdmin;
 		await user.save();
 		return;
 	}

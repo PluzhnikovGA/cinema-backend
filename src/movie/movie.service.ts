@@ -22,7 +22,7 @@ export class MovieService {
 	}
 
 	async byActor(actorId: string) {
-		const movies = await this.MovieModel.findOne({ actors: actorId }).exec();
+		const movies = await this.MovieModel.find({ actors: actorId }).exec();
 
 		if (!movies) throw new NotFoundException('Movies not found');
 
@@ -30,7 +30,7 @@ export class MovieService {
 	}
 
 	async byGenres(genreIds: string[] | Types.ObjectId[]) {
-		const movies = await this.MovieModel.findOne({
+		const movies = await this.MovieModel.find({
 			genres: { $in: genreIds },
 		}).exec();
 
@@ -68,7 +68,7 @@ export class MovieService {
 
 	async getMostPopular() {
 		return await this.MovieModel.find({ countOpened: { $gt: 0 } })
-			.sort({ countOpened: 'asc' })
+			.sort({ countOpened: 'desc' })
 			.populate('genres')
 			.exec();
 	}

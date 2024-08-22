@@ -32,6 +32,12 @@ export class GenreController {
 		return this.genreService.getAll(searchTerm);
 	}
 
+	@Get('collections')
+	@HttpCode(200)
+	async getCollections() {
+		return this.genreService.getCollections();
+	}
+
 	@Get(':id')
 	@HttpCode(200)
 	@Auth('admin')
